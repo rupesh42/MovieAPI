@@ -23,7 +23,7 @@ The Movie API has the following functional requirements:
 - Your rating
 
 #####  You can find top 10 rated movies ordered by BoxOffice value:
-- <No Parameter required>
+- No Parameters required
 
 #####  You can find if a movie has won best picture or not:
 - Movie Name
