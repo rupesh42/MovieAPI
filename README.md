@@ -42,8 +42,8 @@ The Movie API has the following functional requirements:
 ## SWAGGER URL:
 	http://localhost:8081/swagger-ui/index.html
 
-## Flowchat:
-![path to flowshart]([https://github.com/rupesh42/MovieAPI/blob/main/src/main/resources/Sequence_Diagram.PNG)
+## Flowchart:
+![path to flowchart](https://github.com/rupesh42/MovieAPI/blob/main/src/main/resources/Sequence_Diagram.PNG)
 
 ## Next Steps / Improvement areas
 ##### - I could hit API and fetch more data if I didn't have limitations of 1000 hits per day.
