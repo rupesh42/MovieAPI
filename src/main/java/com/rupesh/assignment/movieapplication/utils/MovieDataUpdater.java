@@ -1,5 +1,6 @@
 package com.rupesh.assignment.movieapplication.utils;
 
+import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,7 @@ public class MovieDataUpdater {
 
 	private final String apiUrl;
 
+
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
@@ -55,7 +58,6 @@ public class MovieDataUpdater {
 	public void updateMovieData() {
 		try {
 			List<Movies> movies = movieRepository.findAll();
-			System.out.println(movies);
 			movies.stream()
 					.filter(movie -> (movie.getImdbRating() == 0 || movie.getBoxOffice().intValue() == 0)
 							&& OscarCategoryMapper.getCategory(movie.getCategory()) == OscarCategory.MOVIE)
@@ -77,12 +79,10 @@ public class MovieDataUpdater {
 	 * @param movie
 	 */
 	public void callExternalAPI(String movieName, Movies movie) {
-		String url = apiUrl + modifyMovieName(movieName) + "&apikey=" + apiKey;
+		URI uri = UriComponentsBuilder.fromHttpUrl(apiUrl).queryParam("t", modifyMovieName(movieName))
+				.queryParam("apikey", apiKey).build().toUri();
 		
-		if (!url.startsWith("http://") && !url.startsWith("https://")) {
-	        url = "http://" + url;
-	    }
-
+		String url = uri.toString();
 		try {
 			String jsonResponse = restTemplate.getForObject(url, String.class);
 			MovieData response = objectMapper.readValue(jsonResponse, MovieData.class);
