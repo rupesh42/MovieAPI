@@ -36,7 +36,7 @@ public class MovieService {
 		this.movieDataUpdater = movieDataUpdater;
 	}
 	
-	private final static String MOVIENOTFOUND = "Movie not found with name: ";
+	private final static String MOVIE_NOT_FOUND = "Movie not found with name: ";
 	/**
 	 * Updates the ratings for the specified movie and the rating will be provided
 	 * by user.
