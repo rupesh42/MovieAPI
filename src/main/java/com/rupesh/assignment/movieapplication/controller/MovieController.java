@@ -1,4 +1,4 @@
-package com.rupesh.assignment.MovieAPIApplication.movies;
+package com.rupesh.assignment.movieapplication.controller;
 
 import java.util.List;
 
@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController; 
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rupesh.assignment.movieapplication.domain.MovieDTO;
+import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.service.MovieServiceImpl; 
 
 /**
  * Controller for handling movie-related operations.
@@ -21,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/movies") 
 public class MovieController {
 
-    private final MovieService movieService;
+    private final MovieServiceImpl movieService;
 
     @Autowired
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieServiceImpl movieService) {
         this.movieService = movieService;
     }
 
@@ -35,20 +39,20 @@ public class MovieController {
      * @param newRating the new rating to be added
      * @return a list of updated movie details
      */
-    @PostMapping("/updateratings")
-    public List<MovieDTO> updateRatingsForMovies(@RequestParam String movieName, @RequestParam double newRating) {
-        return movieService.updateRatingsForMovies(movieName, newRating);
+    @PostMapping("/updateRatings")
+    public List<MovieDTO> updateRatings(@RequestParam String movieName, @RequestParam double newRating) {
+        return movieService.updateRatings(movieName, newRating);
     }
 
     /**
      * Finds movies by their nominee.
      * 
-     * @param nominee the nominee to search for
+     * @param movieName the nominee to search for
      * @return a list of movies matching the nominee
      */
     @GetMapping("/findByName")
-    public ResponseEntity<List<MovieDTO>> findMoviesByNominee(@RequestParam String nominee) {
-        return new ResponseEntity<>(movieService.findMoviesByNominee(nominee), HttpStatus.OK);
+    public ResponseEntity<List<MovieDTO>> findMoviesByNominee(@RequestParam String movieName) {
+        return new ResponseEntity<>(movieService.findMoviesByNominee(movieName), HttpStatus.OK);
     }
 
     /**
@@ -56,19 +60,19 @@ public class MovieController {
      * 
      * @return a list of top 10 movies
      */
-    @GetMapping("/Top10")
-    public ResponseEntity<List<MovieEntity>> getTop10Movies() {
-        return new ResponseEntity<List<MovieEntity>>(movieService.getTop10(), HttpStatus.OK);
+    @GetMapping("/top10")
+    public ResponseEntity<List<Movies>> getTop10Movies() {
+        return new ResponseEntity<>(movieService.getTop10(), HttpStatus.OK);
     }
 
     /**
      * Gets the Best Picture winner statement for the specified nominee.
      * 
-     * @param nominee the nominee to check
+     * @param movieName the nominee to check
      * @return a statement indicating whether the nominee has won Best Picture
      */
-    @GetMapping("/bestPicture")
-    public ResponseEntity<String> getBestPictureWinnerStatement(@RequestParam String nominee) {
-        return new ResponseEntity<>(movieService.getBestPictureWinnerStatement(nominee), HttpStatus.OK);
+    @GetMapping("/isOscarBestPicture")
+    public ResponseEntity<String> hastheMovieWonOscars(@RequestParam String movieName) {
+        return new ResponseEntity<>(movieService.hastheMovieWonOscars(movieName), HttpStatus.OK);
     }
 }

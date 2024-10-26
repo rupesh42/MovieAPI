@@ -1,7 +1,12 @@
-package com.rupesh.assignment.MovieAPIApplication.exception;
+package com.rupesh.assignment.movieapplication.exception;
 
 import java.util.Date;
 
+/**
+ * This is ErrorMessage which will be useful in case of errors returning statusCode, timestamp, message and description
+ * @author Rupesh
+ *
+ */
 public class ErrorMessage {
   private int statusCode;
   private Date timestamp;

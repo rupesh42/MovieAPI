@@ -16,11 +16,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieEntity;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieRepository;
-import com.rupesh.assignment.MovieAPIApplication.utils.CategoryMapper;
-import com.rupesh.assignment.MovieAPIApplication.utils.MovieCategory;
-import com.rupesh.assignment.MovieAPIApplication.utils.MovieDataUpdater;
+import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.repository.MovieRepository;
+import com.rupesh.assignment.movieapplication.utils.MovieDataUpdater;
+import com.rupesh.assignment.movieapplication.utils.OscarCategory;
+import com.rupesh.assignment.movieapplication.utils.OscarCategoryMapper;
 
 @SpringJUnitConfig
 public class MovieDataUpdaterTest {
@@ -40,23 +40,23 @@ public class MovieDataUpdaterTest {
     @Test
     public void testUpdateMovieData() {
         // Given
-        MovieEntity movie1 = new MovieEntity();
+        Movies movie1 = new Movies();
         movie1.setNominee("Inception");
         movie1.setImdbRating((double) 0);
         movie1.setBoxOffice(BigDecimal.ZERO);
         movie1.setCategory("Best Picture");
 
-        MovieEntity movie2 = new MovieEntity();
+        Movies movie2 = new Movies();
         movie2.setNominee("Interstellar");
         movie2.setImdbRating(8.6);
         movie2.setBoxOffice(new BigDecimal("1000000"));
         movie2.setCategory("Best Picture");
 
-        List<MovieEntity> movies = List.of(movie1, movie2);
+        List<Movies> movies = List.of(movie1, movie2);
         when(movieRepository.findAll()).thenReturn(movies);
 
-        try (MockedStatic<CategoryMapper> categoryMapperMock = mockStatic(CategoryMapper.class)) {
-            categoryMapperMock.when(() -> CategoryMapper.getCategory("Best Picture")).thenReturn(MovieCategory.MOVIE);
+        try (MockedStatic<OscarCategoryMapper> categoryMapperMock = mockStatic(OscarCategoryMapper.class)) {
+            categoryMapperMock.when(() -> OscarCategoryMapper.getCategory("Best Picture")).thenReturn(OscarCategory.MOVIE);
 
             // Invoke the method
             movieDataUpdater.updateMovieData();

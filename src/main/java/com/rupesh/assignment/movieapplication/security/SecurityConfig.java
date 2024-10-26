@@ -1,5 +1,4 @@
-
-package com.rupesh.assignment.MovieAPIApplication.utils;
+package com.rupesh.assignment.movieapplication.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -16,7 +15,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -61,4 +59,5 @@ public class SecurityConfig {
 				.httpBasic(withDefaults());
 		return http.build();
 	}
+	
 }

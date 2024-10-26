@@ -1,4 +1,4 @@
-package com.rupesh.assignment.MovieAPIApplication.utils;
+package com.rupesh.assignment.movieapplication.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,23 +21,29 @@ import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieEntity;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieRepository;
+import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.repository.MovieRepository;
 
 /**
  * UploadCsvRunner runs on application startup and uploads a CSV file
  * automatically.
  */
 @Component
-public class UploadCsvRunner implements CommandLineRunner {
+public class CsvProcessor implements CommandLineRunner {
 
 	@Value("${csv.file.path}")
 	private Resource fileResource;
 
-	private static final Logger log = LoggerFactory.getLogger(UploadCsvRunner.class);
-
+	private static final Logger LOG = LoggerFactory.getLogger(CsvProcessor.class);
+	
+	private static final String ERROR_IN_PROCESSING = "Error processing record: ";
+	
+	private final MovieRepository movieRepository;
+	
 	@Autowired
-	private MovieRepository movieRepository;
+	public CsvProcessor(MovieRepository movieRepository) {
+		this.movieRepository = movieRepository;
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -56,28 +62,30 @@ public class UploadCsvRunner implements CommandLineRunner {
 		try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(file.getInputStream())).withSkipLines(1)
 				.build()) {
 			List<String[]> records = reader.readAll();
-			List<MovieEntity> movies = new ArrayList<>();
+			List<Movies> movies = new ArrayList<>();
 
-			for (String[] record : records) {
-				try {
-					MovieEntity movie = new MovieEntity();
-					movie.setMovieyear(record[0]);
-					movie.setCategory(record[1]);
-					movie.setNominee(record[2]);
-					movie.setAdditionalInfo(record[3]);
-					movie.setOscarWinner(record[4].equalsIgnoreCase("Yes"));
-					movie.setImdbRating((double) 0);
-					movie.setImdbVotes(0);
-					movie.setBoxOffice(new BigDecimal(0));
-					movies.add(movie);
-				} catch (Exception e) {
-					log.error("Error processing record: " + Arrays.toString(record));
-				}
+			for (var movieRecord : records) {
+			    try {
+			        var movie = new Movies();
+			        movie.setMovieyear(movieRecord[0]);
+			        movie.setCategory(movieRecord[1]);
+			        movie.setNominee(movieRecord[2]);
+			        movie.setAdditionalInfo(movieRecord[3]);
+			        movie.setOscarWinner("Yes".equalsIgnoreCase(movieRecord[4]));
+			        movie.setImdbRating(0.0);
+			        movie.setImdbVotes(0);
+			        movie.setBoxOffice(BigDecimal.ZERO);
+
+			        movies.add(movie);
+			    } catch (Exception e) {
+			        LOG.error("Error processing record: " + Arrays.toString(movieRecord), e);
+			    }
 			}
+
 
 			movieRepository.saveAll(movies);
 		} catch (IOException e) {
-			log.error("Error reading CSV file", e);
+			LOG.error("Error reading CSV file", e);
 			throw new CsvException("Failed to read CSV file");
 		}
 	}
@@ -92,7 +100,7 @@ public class UploadCsvRunner implements CommandLineRunner {
 		try (FileInputStream input = new FileInputStream(fileResource.getFile())) {
 			MultipartFile multipartFile = new MockMultipartFile("file", fileResource.getFilename(), "text/csv", input);
 			readCsvAndSaveToDb(multipartFile);
-			log.info("CSV data saved successfully");
+			LOG.info("CSV data saved successfully");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,9 +1,9 @@
-package com.rupesh.assignment.MovieAPIApplication.utils;
+package com.rupesh.assignment.movieapplication.utils;
 
 /**
  * Enum representing various categories of movies.
  */
-public enum MovieCategory {
+public enum OscarCategory {
 
 	/** Category for feature films. */
 	MOVIE("Movie Category"),
@@ -30,7 +30,7 @@ public enum MovieCategory {
 	 * 
 	 * @param description the description of the category
 	 */
-	MovieCategory(String description) {
+	OscarCategory(String description) {
 		this.description = description;
 	}
 

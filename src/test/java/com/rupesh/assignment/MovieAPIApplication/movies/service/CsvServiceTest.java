@@ -16,8 +16,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.exceptions.CsvException;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieRepository;
-import com.rupesh.assignment.MovieAPIApplication.utils.UploadCsvRunner;
+import com.rupesh.assignment.movieapplication.repository.MovieRepository;
+import com.rupesh.assignment.movieapplication.utils.CsvProcessor;
 
 public class CsvServiceTest {
 
@@ -25,7 +25,7 @@ public class CsvServiceTest {
     private MovieRepository movieRepository;
 
     @InjectMocks
-    private UploadCsvRunner csvService;
+    private CsvProcessor csvService;
 
     @BeforeEach
     public void setUp() {
@@ -33,10 +33,9 @@ public class CsvServiceTest {
     }
 
     @Test
-    public void testReadCsvAndSaveToDb() throws CsvException, IOException {
+    void testReadCsvAndSaveToDb() throws CsvException, IOException {
         // Given
-        String csvContent = "Year,Category,Nominee,Additional Info,HasWon\n" +
-                            "2020,Best Picture,Inception,,Yes\n";
+        String csvContent = "Year,Category,Nominee,Additional Info,HasWon 2020,Best Picture,Inception,,Yes\n";
         MultipartFile file = new MockMultipartFile("file", "movies.csv", "text/csv", new ByteArrayInputStream(csvContent.getBytes()));
 
         // When

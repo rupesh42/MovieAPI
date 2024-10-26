@@ -24,14 +24,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.rupesh.assignment.MovieAPIApplication.exception.CustomException;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieDTO;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieEntity;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieRepository;
-import com.rupesh.assignment.MovieAPIApplication.movies.MovieService;
-import com.rupesh.assignment.MovieAPIApplication.utils.MovieDataUpdater;
+import com.rupesh.assignment.movieapplication.domain.MovieDTO;
+import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.exception.MovieAPIException;
+import com.rupesh.assignment.movieapplication.repository.MovieRepository;
+import com.rupesh.assignment.movieapplication.service.MovieServiceImpl;
+import com.rupesh.assignment.movieapplication.utils.MovieDataUpdater;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceTest {
@@ -41,30 +39,30 @@ public class MovieServiceTest {
 
 	@Spy
 	@InjectMocks
-	private MovieService movieService;
+	private MovieServiceImpl movieService;
 
 	@Mock
 	MovieDataUpdater movieDataUpdater;
 
 	@Test
-	public void testUpdateRatingsForMovies() throws JsonMappingException, JsonProcessingException {
+	public void testUpdateRatingsForMovies() {
 		String movieName = "Inception";
 		double newRating = 9.0;
 
-		MovieEntity movie1 = new MovieEntity();
+		Movies movie1 = new Movies();
 		movie1.setNominee(movieName);
 		movie1.setImdbRating(8.5);
 		movie1.setImdbVotes(1000);
 
-		List<MovieEntity> movies = Arrays.asList(movie1);
+		List<Movies> movies = Arrays.asList(movie1);
 
 		when(movieRepository.findAllByNominee(movieName)).thenReturn(movies);
 		when(movieRepository.saveAll(anyList())).thenReturn(movies);
 
 		// Mock the external API call
-		doNothing().when(movieDataUpdater).callExternalAPI(anyString(), any(MovieEntity.class));
+		doNothing().when(movieDataUpdater).callExternalAPI(anyString(), any(Movies.class));
 
-		List<MovieDTO> updatedMovies = movieService.updateRatingsForMovies(movieName, newRating);
+		List<MovieDTO> updatedMovies = movieService.updateRatings(movieName, newRating);
 
 		assertNotNull(updatedMovies);
 		assertEquals(1, updatedMovies.size());
@@ -76,10 +74,10 @@ public class MovieServiceTest {
 	@Test
 	public void testFindMoviesByNominee_HappyPath() {
 		String movieName = "Inception";
-		MovieEntity movieEntity = new MovieEntity();
+		Movies movieEntity = new Movies();
 		movieEntity.setNominee(movieName);
 		movieEntity.setCategory("Best Picture");
-		List<MovieEntity> movies = List.of(movieEntity);
+		List<Movies> movies = List.of(movieEntity);
 
 		// Ensure repository methods are called on the mock object
 		when(movieRepository.findFirstByNominee(movieName)).thenReturn(Optional.of(movieEntity));
@@ -96,7 +94,7 @@ public class MovieServiceTest {
 	@Test
 	public void testGetMoviesByNominee_FoundInNominee() {
 		String movieName = "Inception";
-		MovieEntity movieEntity = new MovieEntity();
+		Movies movieEntity = new Movies();
 		movieEntity.setNominee(movieName);
 		movieEntity.setCategory("Best Picture");
 		when(movieRepository.findFirstByNominee(movieName)).thenReturn(Optional.of(movieEntity));
@@ -113,7 +111,7 @@ public class MovieServiceTest {
 	@Test
 	public void testGetMoviesByNominee_FoundInAdditionalInfo() {
 		String movieName = "Inception";
-		MovieEntity movieEntity = new MovieEntity();
+		Movies movieEntity = new Movies();
 		movieEntity.setCategory("Actor -- Leading Role");
 		movieEntity.setNominee(movieName);
 		when(movieRepository.findFirstByNominee(movieName)).thenReturn(Optional.empty());
@@ -135,7 +133,7 @@ public class MovieServiceTest {
 		when(movieRepository.findFirstByAdditionalInfo(movieName)).thenReturn(Optional.empty());
 
 		// Expect the CustomException to be thrown
-		CustomException thrown = assertThrows(CustomException.class, () -> {
+		MovieAPIException thrown = assertThrows(MovieAPIException.class, () -> {
 			movieService.findMoviesByNominee(movieName);
 		});
 
@@ -145,7 +143,7 @@ public class MovieServiceTest {
 	@Test
 	public void testGetBestPictureWinnerStatement_Winner() {
 		String nominee = "Inception";
-		MovieEntity movie = new MovieEntity();
+		Movies movie = new Movies();
 		movie.setNominee("Inception");
 		movie.setCategory("Best Picture");
 		movie.setOscarWinner(true);
@@ -153,7 +151,7 @@ public class MovieServiceTest {
 		when(movieRepository.findByNomineeAndCategoryAndOscarWinner(nominee, "Best Picture", true))
 				.thenReturn(Optional.of(movie));
 
-		String result = movieService.getBestPictureWinnerStatement(nominee);
+		String result = movieService.hastheMovieWonOscars(nominee);
 
 		assertEquals(nominee + " has won the Best Picture!", result);
 	}
@@ -164,10 +162,10 @@ public class MovieServiceTest {
 		String nominee = "Inception";
 		when(movieRepository.findByNomineeAndCategoryAndOscarWinner(nominee, "Best Picture", true))
 				.thenReturn(Optional.empty());
-		when(movieRepository.findFirstByNominee(nominee)).thenReturn(Optional.of(new MovieEntity()));
+		when(movieRepository.findFirstByNominee(nominee)).thenReturn(Optional.of(new Movies()));
 
 		// When
-		String result = movieService.getBestPictureWinnerStatement(nominee);
+		String result = movieService.hastheMovieWonOscars(nominee);
 
 		// Then
 		assertEquals(nominee + " has not won the Best Picture.", result);
@@ -182,8 +180,8 @@ public class MovieServiceTest {
 		when(movieRepository.findFirstByNominee(nominee)).thenReturn(Optional.empty());
 
 		// When & Then
-		CustomException thrown = assertThrows(CustomException.class, () -> {
-			movieService.getBestPictureWinnerStatement(nominee);
+		MovieAPIException thrown = assertThrows(MovieAPIException.class, () -> {
+			movieService.hastheMovieWonOscars(nominee);
 		});
 
 		assertEquals("Movie not found with name: " + nominee, thrown.getMessage());
@@ -193,21 +191,21 @@ public class MovieServiceTest {
 	public void testGetTop10() {
 		Pageable pageable = PageRequest.of(0, 10);
 
-		MovieEntity movie1 = new MovieEntity();
+		Movies movie1 = new Movies();
 		movie1.setNominee("Inception");
 		movie1.setImdbRating(8.8);
 		movie1.setBoxOffice(new BigDecimal("829.89"));
 
-		MovieEntity movie2 = new MovieEntity();
+		Movies movie2 = new Movies();
 		movie2.setNominee("The Dark Knight");
 		movie2.setImdbRating(9.0);
 		movie2.setBoxOffice(new BigDecimal("1004.56"));
 
-		List<MovieEntity> movies = Arrays.asList(movie1, movie2);
+		List<Movies> movies = Arrays.asList(movie1, movie2);
 
 		when(movieRepository.findtop10RatedMovies(pageable)).thenReturn(movies);
 
-		List<MovieEntity> result = movieService.getTop10();
+		List<Movies> result = movieService.getTop10();
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
