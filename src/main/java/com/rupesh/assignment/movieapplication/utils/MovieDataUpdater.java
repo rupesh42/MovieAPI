@@ -55,6 +55,7 @@ public class MovieDataUpdater {
 	public void updateMovieData() {
 		try {
 			List<Movies> movies = movieRepository.findAll();
+			System.out.println(movies);
 			movies.stream()
 					.filter(movie -> (movie.getImdbRating() == 0 || movie.getBoxOffice().intValue() == 0)
 							&& OscarCategoryMapper.getCategory(movie.getCategory()) == OscarCategory.MOVIE)
@@ -77,6 +78,10 @@ public class MovieDataUpdater {
 	 */
 	public void callExternalAPI(String movieName, Movies movie) {
 		String url = apiUrl + modifyMovieName(movieName) + "&apikey=" + apiKey;
+		
+		if (!url.startsWith("http://") && !url.startsWith("https://")) {
+	        url = "http://" + url;
+	    }
 
 		try {
 			String jsonResponse = restTemplate.getForObject(url, String.class);

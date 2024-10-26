@@ -78,7 +78,7 @@ public class CsvProcessor implements CommandLineRunner {
 
 			        movies.add(movie);
 			    } catch (Exception e) {
-			        LOG.error("Error processing record: " + Arrays.toString(movieRecord), e);
+			        LOG.error(ERROR_IN_PROCESSING + Arrays.toString(movieRecord), e);
 			    }
 			}
 
@@ -86,7 +86,6 @@ public class CsvProcessor implements CommandLineRunner {
 			movieRepository.saveAll(movies);
 		} catch (IOException e) {
 			LOG.error("Error reading CSV file", e);
-			throw new CsvException("Failed to read CSV file");
 		}
 	}
 

@@ -34,7 +34,7 @@ The Movie API has the following functional requirements:
 	 
 ## Code Quality Factors that are taken care:
 
-- Total 62.8% code coverage by Junit
+- Total 51.1% code coverage by Junit
 - Using SonarLint all "Major" issues are resolved. 	 
 - No external library from untrusted source dependency is used.
 - Code smell is as low as possible

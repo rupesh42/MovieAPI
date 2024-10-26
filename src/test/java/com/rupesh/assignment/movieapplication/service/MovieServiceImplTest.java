@@ -1,4 +1,4 @@
-package com.rupesh.assignment.MovieAPIApplication.movies.service;
+package com.rupesh.assignment.movieapplication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,11 +28,10 @@ import com.rupesh.assignment.movieapplication.domain.MovieDTO;
 import com.rupesh.assignment.movieapplication.domain.Movies;
 import com.rupesh.assignment.movieapplication.exception.MovieAPIException;
 import com.rupesh.assignment.movieapplication.repository.MovieRepository;
-import com.rupesh.assignment.movieapplication.service.MovieServiceImpl;
 import com.rupesh.assignment.movieapplication.utils.MovieDataUpdater;
 
 @ExtendWith(MockitoExtension.class)
-public class MovieServiceTest {
+public class MovieServiceImplTest {
 
 	@Mock
 	private MovieRepository movieRepository;
@@ -42,7 +41,7 @@ public class MovieServiceTest {
 	private MovieServiceImpl movieService;
 
 	@Mock
-	MovieDataUpdater movieDataUpdater;
+	private MovieDataUpdater movieDataUpdater;
 
 	@Test
 	public void testUpdateRatingsForMovies() {

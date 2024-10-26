@@ -1,4 +1,4 @@
-package com.rupesh.assignment.MovieAPIApplication.movies.service;
+package com.rupesh.assignment.movieapplication.utils;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
@@ -17,9 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.exceptions.CsvException;
 import com.rupesh.assignment.movieapplication.repository.MovieRepository;
-import com.rupesh.assignment.movieapplication.utils.CsvProcessor;
 
-public class CsvServiceTest {
+public class CsvProcessorTest {
 
     @Mock
     private MovieRepository movieRepository;
