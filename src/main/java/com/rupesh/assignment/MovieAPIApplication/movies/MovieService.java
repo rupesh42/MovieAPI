@@ -50,7 +50,7 @@ public class MovieService {
 
 	public List<MovieDTO> updateRatingsForMovies(String movieName, double newRating) {
 		List<MovieEntity> movies = movieRepository.findAllByNominee(movieName);
-		movies.stream().findFirst().orElseThrow(() -> new CustomException(MOVIENOTFOUND + movieName));
+		movies.stream().findFirst().orElseThrow(() -> new CustomException(MOVIE_NOT_FOUND + movieName));
 		if (newRating < 1)
 			throw new CustomException("Minimum rating is 1 " + newRating);
 		for (MovieEntity movie : movies) {
@@ -83,7 +83,7 @@ public class MovieService {
 		List<MovieEntity> movies = getMoviesByNominee(movieName);
 
 		Optional.of(movies).filter(m -> !m.isEmpty())
-				.orElseThrow(() -> new CustomException(MOVIENOTFOUND+ movieName));
+				.orElseThrow(() -> new CustomException(MOVIE_NOT_FOUND+ movieName));
 
 		return movies.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
@@ -141,7 +141,7 @@ public class MovieService {
 		if (movie.isPresent()) 
 			return nominee + " has won the Best Picture!";
 		 else {
-			movieRepository.findFirstByNominee(nominee).orElseThrow(() -> new CustomException(MOVIENOTFOUND+ nominee));
+			movieRepository.findFirstByNominee(nominee).orElseThrow(() -> new CustomException(MOVIE_NOT_FOUND+ nominee));
 			return nominee + " has not won the Best Picture.";
 		}
 	}
