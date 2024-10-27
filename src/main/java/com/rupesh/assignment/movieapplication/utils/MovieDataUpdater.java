@@ -37,7 +37,6 @@ public class MovieDataUpdater {
 
 	private final String apiUrl;
 
-
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	private final ObjectMapper objectMapper = new ObjectMapper();

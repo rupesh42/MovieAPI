@@ -1,5 +1,7 @@
 package com.rupesh.assignment.movieapplication.utils;
 
+import lombok.NoArgsConstructor;
+
 /**
  * This class will help current and future implementation If developer needs to
  * perform any action based on the category of the movie this Category Mapper
@@ -9,10 +11,8 @@ package com.rupesh.assignment.movieapplication.utils;
  * @author Rupesh
  *
  */
+@NoArgsConstructor
 public class OscarCategoryMapper {
-
-	private OscarCategoryMapper() {
-	}
 
 	public static OscarCategory getCategory(String awardType) {
 		switch (awardType) {

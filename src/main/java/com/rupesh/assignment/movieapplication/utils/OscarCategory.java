@@ -1,8 +1,11 @@
 package com.rupesh.assignment.movieapplication.utils;
 
+import lombok.AllArgsConstructor;
+
 /**
  * Enum representing various categories of movies.
  */
+@AllArgsConstructor
 public enum OscarCategory {
 
 	/** Category for feature films. */
@@ -24,15 +27,6 @@ public enum OscarCategory {
 	SHORT("Short");
 
 	private final String description;
-
-	/**
-	 * Constructor to set the description for the movie category.
-	 * 
-	 * @param description the description of the category
-	 */
-	OscarCategory(String description) {
-		this.description = description;
-	}
 
 	/**
 	 * Gets the description of the movie category.

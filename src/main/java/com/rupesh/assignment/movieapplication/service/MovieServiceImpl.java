@@ -47,8 +47,8 @@ public class MovieServiceImpl implements MovieService {
 	 * @param movieName the name of the movie to update ratings for
 	 * @param newRating the new rating to be added
 	 * @return a list of updated movie details as MovieDTOs
-	 * @throws MovieAPIException if the movie is not found or the rating is less than
-	 *                         1
+	 * @throws MovieAPIException if the movie is not found or the rating is less
+	 *                           than 1
 	 */
 
 	@Override
@@ -59,17 +59,16 @@ public class MovieServiceImpl implements MovieService {
 			throw new MovieAPIException("Minimum rating is 1 " + newRating);
 
 		movies.forEach(movie -> {
-		    movieDataUpdater.callExternalAPI(movieName, movie);
-		    
-		    var imdbVotes = movie.getImdbVotes();
-		    var totalRatingSum = (movie.getImdbRating() * imdbVotes) + newRating;
-		    var newAverageRating = totalRatingSum / (imdbVotes + 1);
-		    var roundedAverageRating = BigDecimal.valueOf(newAverageRating).setScale(2, RoundingMode.UP).doubleValue();
-		    
-		    movie.setImdbVotes(imdbVotes + 1);
-		    movie.setImdbRating(roundedAverageRating);
-		});
+			movieDataUpdater.callExternalAPI(movieName, movie);
 
+			var imdbVotes = movie.getImdbVotes();
+			var totalRatingSum = (movie.getImdbRating() * imdbVotes) + newRating;
+			var newAverageRating = totalRatingSum / (imdbVotes + 1);
+			var roundedAverageRating = BigDecimal.valueOf(newAverageRating).setScale(2, RoundingMode.UP).doubleValue();
+
+			movie.setImdbVotes(imdbVotes + 1);
+			movie.setImdbRating(roundedAverageRating);
+		});
 
 		List<Movies> updatedMovies = movieRepository.saveAll(movies);
 		return updatedMovies.stream().map(this::convertToDTO).toList();
@@ -109,23 +108,19 @@ public class MovieServiceImpl implements MovieService {
 		Optional<Movies> movieOptional = movieRepository.findFirstByNominee(movieName);
 		if (movieOptional.isPresent()) {
 			Movies movie = movieOptional.get();
-			OscarCategory category = OscarCategoryMapper.getCategory(movie.getCategory());
-			if (category == OscarCategory.ACTORS) {
+			if (OscarCategoryMapper.getCategory(movie.getCategory()) == OscarCategory.ACTORS)
 				return movieRepository.findAllByAdditionalInfo(movieDataUpdater.modifyMovieName(movieName));
-			} else {
+			else
 				return movieRepository.findAllByNominee(movieDataUpdater.modifyMovieName(movieName));
-			}
 		}
 		// If not found in nominee, try finding in additional info
 		movieOptional = movieRepository.findFirstByAdditionalInfo(movieName);
 		if (movieOptional.isPresent()) {
 			Movies movie = movieOptional.get();
-			OscarCategory category = OscarCategoryMapper.getCategory(movie.getCategory());
-			if (category == OscarCategory.ACTORS) {
+			if (OscarCategoryMapper.getCategory(movie.getCategory()) == OscarCategory.ACTORS)
 				return movieRepository.findAllByAdditionalInfo(movieDataUpdater.modifyMovieName(movieName));
-			} else {
+			else
 				return movieRepository.findAllByNominee(movieDataUpdater.modifyMovieName(movieName));
-			}
 		}
 		// If no category match, return an empty list
 		return Collections.emptyList();
@@ -140,8 +135,7 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public String hastheMovieWonOscars(String nominee) {
-		Optional<Movies> movie = movieRepository.findByNomineeAndCategoryAndOscarWinner(nominee, "Best Picture",
-				true);
+		Optional<Movies> movie = movieRepository.findByNomineeAndCategoryAndOscarWinner(nominee, "Best Picture", true);
 
 		if (movie.isPresent())
 			return nominee + " has won the Best Picture!";
