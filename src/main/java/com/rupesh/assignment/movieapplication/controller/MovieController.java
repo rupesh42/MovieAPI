@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rupesh.assignment.movieapplication.domain.MovieDTO;
 import com.rupesh.assignment.movieapplication.domain.Movies;
-import com.rupesh.assignment.movieapplication.service.MovieServiceImpl; 
+import com.rupesh.assignment.movieapplication.service.MovieService; 
 
 /**
  * Controller for handling movie-related operations.
@@ -25,10 +25,10 @@ import com.rupesh.assignment.movieapplication.service.MovieServiceImpl;
 @RequestMapping("/movies") 
 public class MovieController {
 
-    private final MovieServiceImpl movieService;
+    private final MovieService movieService;
 
     @Autowired
-    public MovieController(MovieServiceImpl movieService) {
+    public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
