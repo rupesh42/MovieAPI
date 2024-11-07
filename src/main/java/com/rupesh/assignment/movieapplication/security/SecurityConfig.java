@@ -55,7 +55,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 				.authorizeHttpRequests(
-						(requests) -> requests.requestMatchers("/movies/**").authenticated().anyRequest().permitAll())
+						(requests) -> requests.requestMatchers("/movie/**").authenticated().anyRequest().permitAll())
 				.httpBasic(withDefaults());
 		return http.build();
 	}

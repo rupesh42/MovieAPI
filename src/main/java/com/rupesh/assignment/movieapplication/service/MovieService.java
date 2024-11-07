@@ -3,7 +3,7 @@ package com.rupesh.assignment.movieapplication.service;
 import java.util.List;
 
 import com.rupesh.assignment.movieapplication.domain.MovieDTO;
-import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.domain.Movie;
 import com.rupesh.assignment.movieapplication.exception.MovieAPIException;
 
 /**
@@ -30,7 +30,7 @@ public interface MovieService {
      * @return a list of movie details as MovieDTOs matching the nominee
      * @throws MovieAPIException if no movies are found with the specified nominee
      */
-    List<MovieDTO> findMoviesByNominee(String movieName);
+    List<MovieDTO> findMovieByNominee(String movieName);
 
     /**
      * Gets the Best Picture winner statement for the specified nominee.
@@ -46,6 +46,6 @@ public interface MovieService {
      * 
      * @return a list of top 10 movies
      */
-    List<Movies> getTop10();
+    List<Movie> getTop10();
 }
 

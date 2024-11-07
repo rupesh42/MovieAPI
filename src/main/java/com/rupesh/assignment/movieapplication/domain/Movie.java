@@ -1,15 +1,14 @@
 package com.rupesh.assignment.movieapplication.domain;
 
 import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -23,8 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public class Movies {
+public class Movie {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +31,7 @@ public class Movies {
 	@Column(length = 500)
 	private String additionalInfo;
 
-	private String movieyear;
+	private String movieYear;
 
 	@Column(length = 1000)
 	private String nominee;
@@ -47,6 +45,7 @@ public class Movies {
 
 	private Integer imdbVotes;
 
+	@Max(value = 10)
 	private Double imdbRating;
 
 

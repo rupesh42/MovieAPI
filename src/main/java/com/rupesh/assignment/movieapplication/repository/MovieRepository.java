@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.domain.Movie;
 
 
 /**
@@ -18,26 +18,26 @@ import com.rupesh.assignment.movieapplication.domain.Movies;
  *
  */
 @Repository
-public interface MovieRepository extends JpaRepository<Movies, Integer> {
+public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
 	//getTop10
-	@Query(value = "SELECT m FROM Movies m ORDER BY m.imdbRating DESC, m.boxOffice DESC")
-    List<Movies> findtop10RatedMovies(Pageable pageable);
+	@Query(value = "SELECT m FROM Movie m ORDER BY m.imdbRating DESC, m.boxOffice DESC")
+    List<Movie> findtop10RatedMovies(Pageable pageable);
 
 	//find by name nominee
-    List<Movies> findAllByNominee(String nominee);
+    List<Movie> findAllByNominee(String nominee);
 
 	//find by name additional info
-	List<Movies> findAllByAdditionalInfo(String additionalInfo);
+	List<Movie> findAllByAdditionalInfo(String additionalInfo);
 
 	//update movie rating
-	Optional<Movies> findFirstByNominee(String nominee);
+	Optional<Movie> findFirstByNominee(String nominee);
 
 	//getBestPicture
-	Optional<Movies> findByNomineeAndCategoryAndOscarWinner(String nominee, String category, boolean oscarWinner);
+	Optional<Movie> findByNomineeAndCategoryAndOscarWinner(String nominee, String category, boolean oscarWinner);
 
 	//find first  by Additional Info
-    Optional<Movies> findFirstByAdditionalInfo(String additionalInfo);
+    Optional<Movie> findFirstByAdditionalInfo(String additionalInfo);
 
 
 }

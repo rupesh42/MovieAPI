@@ -2,16 +2,12 @@ package com.rupesh.assignment.movieapplication.domain;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -22,7 +18,6 @@ import lombok.ToString;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
-@EqualsAndHashCode
 public class MovieData {
 
 	@JsonDeserialize(using = CustomBigDecimalDeserializer.class)

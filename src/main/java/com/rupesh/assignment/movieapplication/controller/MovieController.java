@@ -1,18 +1,16 @@
 package com.rupesh.assignment.movieapplication.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.rupesh.assignment.movieapplication.domain.MovieDTO;
-import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.domain.Movie;
 import com.rupesh.assignment.movieapplication.service.MovieService; 
 
 /**
@@ -22,7 +20,7 @@ import com.rupesh.assignment.movieapplication.service.MovieService;
  */
 
 @RestController 
-@RequestMapping("/movies") 
+@RequestMapping("/movie") 
 public class MovieController {
 
     private final MovieService movieService;
@@ -39,7 +37,7 @@ public class MovieController {
      * @param newRating the new rating to be added
      * @return a list of updated movie details
      */
-    @PostMapping("/updateRatings")
+    @PutMapping("/updateRatings")
     public List<MovieDTO> updateRatings(@RequestParam String movieName, @RequestParam double newRating) {
         return movieService.updateRatings(movieName, newRating);
     }
@@ -52,7 +50,7 @@ public class MovieController {
      */
     @GetMapping("/findByName")
     public ResponseEntity<List<MovieDTO>> findMoviesByNominee(@RequestParam String movieName) {
-        return new ResponseEntity<>(movieService.findMoviesByNominee(movieName), HttpStatus.OK);
+        return new ResponseEntity<>(movieService.findMovieByNominee(movieName), HttpStatus.OK);
     }
 
     /**
@@ -61,7 +59,7 @@ public class MovieController {
      * @return a list of top 10 movies
      */
     @GetMapping("/top10")
-    public ResponseEntity<List<Movies>> getTop10Movies() {
+    public ResponseEntity<List<Movie>> getTop10Movies() {
         return new ResponseEntity<>(movieService.getTop10(), HttpStatus.OK);
     }
 

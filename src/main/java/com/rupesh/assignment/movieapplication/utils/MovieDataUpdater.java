@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rupesh.assignment.movieapplication.domain.MovieData;
-import com.rupesh.assignment.movieapplication.domain.Movies;
+import com.rupesh.assignment.movieapplication.domain.Movie;
 import com.rupesh.assignment.movieapplication.repository.MovieRepository;
 
 /**
@@ -56,7 +56,7 @@ public class MovieDataUpdater {
 	@EventListener(ApplicationReadyEvent.class)
 	public void updateMovieData() {
 		try {
-			List<Movies> movies = movieRepository.findAll();
+			List<Movie> movies = movieRepository.findAll();
 			movies.stream()
 					.filter(movie -> (movie.getImdbRating() == 0 || movie.getBoxOffice().intValue() == 0)
 							&& OscarCategoryMapper.getCategory(movie.getCategory()) == OscarCategory.MOVIE)
@@ -64,7 +64,6 @@ public class MovieDataUpdater {
 						String movieName = movie.getNominee();
 						callExternalAPI(movieName, movie);
 					});
-			LOG.info("API was called");
 		} catch (Exception e) {
 			LOG.error("An unexpected error occurred: {}", e.getMessage(), e);
 		}
@@ -77,7 +76,7 @@ public class MovieDataUpdater {
 	 * @param movieName
 	 * @param movie
 	 */
-	public void callExternalAPI(String movieName, Movies movie) {
+	public void callExternalAPI(String movieName, Movie movie) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(apiUrl).queryParam("t", modifyMovieName(movieName))
 				.queryParam("apikey", apiKey).build().toUri();
 		
